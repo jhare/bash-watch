@@ -1,0 +1,27 @@
+#!/bin/bash
+
+last_ran=0
+seconds_to_wait=5
+
+inotifywait -m -e modify ./ |
+grep --line-buffered -v "4913" | # neovim creates a dummy file named 4913 life sucks
+grep --line-buffered "\.cpp\|\.h" | # dont let it match maincpp only main.cpp
+while read -r filename eventlist
+do
+  time_now=$(date +%s)
+  # echo "Checking..." $time_now $(($time_now+69))
+  
+  if [[ $((time_now)) -gt $((last_ran))+seconds_to_wait ]];
+  then
+    rm ./testprogram
+    echo "Compiling..."
+    (set -x; g++ -o testprogram main.cpp)
+
+    ./testprogram
+    echo "Debouncing compile for $seconds_to_wait seconds..."
+    last_ran=$(date +%s)
+  else
+    echo '<debounced>'
+  fi
+
+done

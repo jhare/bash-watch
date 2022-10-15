@@ -1,0 +1,9 @@
+time1=`date +%s`
+
+sleep 2
+
+time2=`date +%s`
+
+echo "Time1: $time1, time2: $time2"
+
+echo "Diff is " $((time2-time1))
