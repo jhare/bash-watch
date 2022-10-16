@@ -13,12 +13,13 @@ do
   
   if [[ $((time_now)) -gt $((last_ran))+seconds_to_wait ]];
   then
-    rm ./testprogram
-    echo "Compiling..."
-    (set -x; g++ -o testprogram main.cpp)
+    echo "cleaning..."
+    make clean
 
-    ./testprogram
-    echo "Debouncing compile for $seconds_to_wait seconds..."
+    echo "compiling..."
+    make
+
+    echo "debouncing compile for $seconds_to_wait seconds..."
     last_ran=$(date +%s)
   else
     echo '<debounced>'
